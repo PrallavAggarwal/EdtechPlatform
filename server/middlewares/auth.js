@@ -21,7 +21,7 @@ exports.auth = async (req, res, next) => {
         //verify the token
         try{
             const decode = await jwt.verify(token, process.env.JWT_SECRET)
-            console.log(decode)
+            console.log("decode value : ",decode)
             req.user = decode
         }
         catch(error){
@@ -50,6 +50,7 @@ exports.isStudent = async (req, res, next) => {
                 message:"This is a protected route for student."
             })
         }
+        next()
     }
     catch(error){
         return res.status(500).json({
@@ -69,6 +70,7 @@ exports.isInstructor = async (req, res, next) => {
                 message:"This is a protected route for instructor."
             })
         }
+        next()
     }
     catch(error){
         return res.status(500).json({
@@ -82,12 +84,14 @@ exports.isInstructor = async (req, res, next) => {
 //isAdmin
 exports.isAdmin = async (req, res, next) => {
     try{
+        console.log(`req.user.accountType : ${req.user.accountType}`)
         if(req.user.accountType !== "Admin"){
             return res.status(401).json({
                 success:false,
                 message:"This is a protected route for admin."
             })
         }
+        next()
     }
     catch(error){
         return res.status(500).json({

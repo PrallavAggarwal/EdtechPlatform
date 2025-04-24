@@ -1,5 +1,6 @@
 const User = require("../models/User")
 const OTP = require("../models/OTP")
+const Profile = require("../models/Profile")
 const otpGenerator = require('otp-generator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -7,7 +8,7 @@ const mailSender = require("../utils/mailSender")
 require('dotenv').config()
 
 //otp verify
-exports.sendOTP = async (req, res) => {
+exports.sendotp = async (req, res) => {
     try{
         //fetch email from request body
         const {email} = req.body
@@ -69,7 +70,7 @@ exports.sendOTP = async (req, res) => {
 
 
 //sign up
-exports.signUp = async (req,res) => {
+exports.signup = async (req,res) => {
     try{
         //data fetch from request body
         const {firstName, lastName, email, password, confirmPassword, accountType, contactNumber, otp} = req.body
@@ -101,8 +102,11 @@ exports.signUp = async (req,res) => {
         //find({email}) : returns all docs that matches same email.
         //sort({createdAt:-1}) : sorts result according to createdAt field but in descending order(-1).
         //limit(1) : limits the result to one doc.
-        const recentOtp = await OTP.find({email}).sort({createdAt:-1}).limit(1)
-        console.log(recentOtp)
+        const recentOtp = await OTP.find({email : email}).sort({createdAt:-1}).limit(1)
+        // const recentOtp = await OTP.find({})
+        console.log("recentOtp 5 : ", recentOtp)
+        console.log(`otp ${otp} and recentotp ${recentOtp[0].otp}`)
+        console.log("email : ", email)
 
         //validate otp
         if(recentOtp.length == 0){
@@ -112,7 +116,7 @@ exports.signUp = async (req,res) => {
                 message:"OTP not found."
             })
         }
-        else if(otp !== recentOtp){
+        else if(otp !== recentOtp[0].otp){
             //invalid otp
             return res.status(400).json({
                 success:false,

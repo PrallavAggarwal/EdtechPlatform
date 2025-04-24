@@ -36,7 +36,7 @@ exports.createCategory = async (req , res) => {
 }
 
 //get all tags
-exports.showAllCategory = async (req,res) => {
+exports.showAllCategories = async (req,res) => {
     try{
         const allCategory = await Category.find({}, {name:true, description:true})
         res.status(200).json({
@@ -100,22 +100,22 @@ exports.categoryPageDetails = async (req, res) => {
 }
 
 //contact handler
-exports.contactHandler = async (req, res) => {
-    try {
-        //fetch all details
-        const {firstname, lastname, email, message, contactno} = req.body
-        //send mail
-        await mailSender(email, `Feedback from ${firstname} ${lastname}`, contactUsEmail(firstname, lastname, email, message, contactno) ) 
-        //generate response
-        return res.status(400).json({
-            success:true,
-            message:"message sent to gmail."
-        })
+// exports.contactHandler = async (req, res) => {
+//     try {
+//         //fetch all details
+//         const {firstname, lastname, email, message, contactno} = req.body
+//         //send mail
+//         await mailSender(email, `Feedback from ${firstname} ${lastname}`, contactUsEmail(firstname, lastname, email, message, contactno) ) 
+//         //generate response
+//         return res.status(400).json({
+//             success:true,
+//             message:"message sent to gmail."
+//         })
 
-    } catch (error) {
-        return res.status(500).json({
-            success:false,
-            message:error.message,
-        })
-    }
-}
+//     } catch (error) {
+//         return res.status(500).json({
+//             success:false,
+//             message:error.message,
+//         })
+//     }
+// }

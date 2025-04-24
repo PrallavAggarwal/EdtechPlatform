@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema({
     },
     token:{
         type:String,
-        required:true,
+        // required:true,
     },
     resetPasswordExpires:{
         type:Date
@@ -43,6 +43,15 @@ const UserSchema = new mongoose.Schema({
             ref:"CourseProgress"
         }
     ],
+    email:{
+        type:String,
+        required:true,
+        trim:true
+    },
+    password:{
+        type:String,
+        required:true
+    }
 
 })
 
