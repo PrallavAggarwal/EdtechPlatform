@@ -7,7 +7,7 @@ exports.createSubSection = async (req, res) => {
         //fetch data from req body
         const {sectionId, title, timeDuration, description} = req.body
         //extract file/video
-        const video = req.files.videoFile
+        const video = req.files.video
         //validation
         if(!sectionId || !title || !timeDuration || !description){
             return res.status(400).json({
@@ -16,7 +16,16 @@ exports.createSubSection = async (req, res) => {
             })
         }
         //upload video to cloudinary
-        const uploadDetails = await uploadImageCloudinary(video, process.env.FOLDER_NAME)
+        let uploadDetails
+        try {
+           uploadDetails = await uploadImageCloudinary(video, process.env.FOLDER_NAME)
+        } catch (error) {
+          return res.status(400).json({
+            success:false,
+            message:"error while uploading video."
+        })
+        }
+        // const uploadDetails = await uploadImageCloudinary(video, process.env.FOLDER_NAME)
         //create sub section
         const SubSectionDetails = await SubSection.create({
             title:title,
